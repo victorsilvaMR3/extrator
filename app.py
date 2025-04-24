@@ -1,4 +1,4 @@
-// Adaptado para rodar em ambiente web com Streamlit
+
 import fitz  # PyMuPDF
 import re
 import streamlit as st
@@ -64,7 +64,6 @@ def gerar_evolucao(dados):
     return texto.strip()
 
 
-# Interface
 arquivo_pdf = st.file_uploader("📎 Faça o upload do PDF da evolução médica", type=["pdf"])
 
 if arquivo_pdf:
