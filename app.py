@@ -1,4 +1,3 @@
-
 import fitz  # PyMuPDF
 import re
 import streamlit as st
@@ -18,9 +17,20 @@ def extrair_texto_pdf(arquivo):
 
 def parsear_evolucao(texto):
     dados = {}
-    dados['nome'] = re.search(r'NOME DO PACIENTE: (.+)', texto).group(1).strip()
-    dados['idade'] = re.search(r'IDADE: (\d+ anos)', texto).group(1)
-    dados['data_internacao'] = re.search(r'DATA DA INTERNAÇÃO: (\d{2}/\d{2}/\d{4})', texto).group(1)
+    try:
+        dados['nome'] = re.search(r'NOME DO PACIENTE: (.+)', texto).group(1).strip()
+    except:
+        dados['nome'] = "Não encontrado"
+
+    try:
+        dados['idade'] = re.search(r'IDADE: (\d+ ano\(s\) ?\d* mes\(es\)?)', texto).group(1).strip()
+    except:
+        dados['idade'] = "Não encontrado"
+
+    try:
+        dados['data_internacao'] = re.search(r'DATA DA INTERNAÇÃO: (\d{2}/\d{2}/\d{4})', texto).group(1)
+    except:
+        dados['data_internacao'] = "Não encontrado"
 
     diagnostico_match = re.search(r'DIAGNÓSTICOS: (.+?)\n', texto)
     dados['diagnosticos'] = diagnostico_match.group(1).strip() if diagnostico_match else ""
@@ -64,6 +74,7 @@ def gerar_evolucao(dados):
     return texto.strip()
 
 
+# Interface
 arquivo_pdf = st.file_uploader("📎 Faça o upload do PDF da evolução médica", type=["pdf"])
 
 if arquivo_pdf:
